@@ -1,0 +1,9 @@
+## asteinberger9_seqscripts
+
+### This repo contains scripts written by Andrew Steinberger.
+
+#### simper_pretty.R
+This script is meant to be used to rapidly perform the simper function (vegan R package) for all comparisons of interest in a dataset. Inputs are OTU and metadata table. Outputs .csv, user can tailor contents of .csv by setting perc_cutoff, low_cutoff, and low_val to only output OTUs contributing to differences at indicated levels. Can also handle taxonomic levels instead of OTU, however a specific format is required.
+
+#### R_krusk.R
+This script takes the .csv output of simper_pretty.R and the OTU/metadata/taxonomy tables and performes the non-parametric Kruskal-Wallis rank-sum test on each otu in the .csv file. Otuput is a .csv file containing the same contents of simper output .csv file with the additional information: p-value, fdr corrected p-value, otu taxonomic classification (if applicable), mean rel. abund and std dev of otu/tax_lvl in group 1, and mean rel. abund and std dev of otu/tax_lvl in group 2 of comparison.
