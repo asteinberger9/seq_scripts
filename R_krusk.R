@@ -3,6 +3,7 @@ kruskal.pretty: automates kruskal test execution on simper_pretty.R output
 
 Andrew Steinberger
 asteinberger@wisc.edu
+Suen Lab
 University of Wisconsin-Madison
 
       Copyright (C) 2016 Andrew Steinberger
@@ -38,11 +39,12 @@ Changelog
            of the conditions compared
 1/24/2017  Handles simper.pretty output at taxonomic lvls, adds rel abund stdev to
            output file
+2/28/2017  Fixed crash when rownames and csv$X unequal, optional taxonomy argument
 
 Mothur output:
   otu=      otu table
   metrics=  metadata table
-  taxonomy= .taxonomy output file from classify.otu command in mothur
+  taxonomy= .taxonomy output file from classify.otu command in mothur (optional)
 simper.pretty output:
   csv=         _clean_simper.csv (*Must be imported as data.frame)
     (i.e. csv= data.frame(read.csv("PATH to .csv")))
@@ -57,6 +59,8 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
     #converts output from A.Neuman Taxonomy script
     otu=as.data.frame(t(otu))
   }
+  #changing csv$X to rownames to allow proper splitting of comparisons
+  csv$X=as.integer(rownames(csv))
   L=list()
   R=list()
   mean_L=c()
@@ -75,7 +79,6 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
   R_abund_sd=c()
   abund=as.matrix(otu)
   abund=abund/rowSums(abund)
-  #abund[is.nan(abund)]=0
   for(b in levels(csv$Comparison)){
     otu_list=dplyr::filter(csv, Comparison==b) #saves otu list for current comparison
     for(i in csv$X){
@@ -133,7 +136,11 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
       result=kruskal.test(listbact[[otus]]~listmet[[topic1]])
       krusk=append(krusk, result$p.value)
       #stores taxonomic classification for each otu as list
-      tax=append(tax, as.character(taxonomy[otus, "Taxonomy"]))
+      if(missing(taxonomy)){
+        tax=append(tax, c("NA"))
+      } else {
+        tax=append(tax, as.character(taxonomy[otus, "Taxonomy"]))
+      }
       L_mean=append(L_mean, as.character(mean_L[[otus]]))
       R_mean=append(R_mean, as.character(mean_R[[otus]]))
       L_sd=append(L_sd, as.character(sd_L[[otus]]))

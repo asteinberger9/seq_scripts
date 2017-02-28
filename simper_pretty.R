@@ -3,6 +3,7 @@ simper.pretty: automates simper exectution for comparisons of interest
 
 Andrew Steinberger, Kim Dill-Mcfarland, Madison Cox
 asteinberger@wisc.edu
+Suen Lab
 University of Wisconsin-Madison
 
       Copyright (C) 2016 Andrew Steinberger
@@ -34,8 +35,8 @@ low_val=      value of low cutoff (0.01)
 output_name=  name to append to the simper and clean_simper output files"
 ###########################################################################################
 
-simper.pretty = function(x, metrics, interesting, perc_cutoff, low_cutoff, low_val, output_name)
-{library(vegan)
+simper.pretty = function(x, metrics, interesting, perc_cutoff, low_cutoff, low_val, output_name){
+  library(vegan)
   #handling otu tables for taxa levels
   save=list(0)
   if(grepl("Otu", colnames(x)[1])!=TRUE){
