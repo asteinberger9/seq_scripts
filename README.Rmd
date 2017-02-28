@@ -1,8 +1,3 @@
----
-output:
-  html_document: default
-  word_document: default
----
 ## asteinberger9_seqscripts
 
 ### This repo contains scripts written by Andrew Steinberger.
@@ -27,7 +22,7 @@ This script takes the output .csv of simper_pretty.R, and the OTU/metadata/taxon
 #### Inputs:
 otu: OTU table  
 metrics: metadata table  
-taxonomy: The .taxonomy file output from classify.otu command in [mothur](https://www.mothur.org) (optional) 
+taxonomy: The .taxonomy file output from classify.otu command in [mothur](https://www.mothur.org) (optional)  
 csv: output from simper.pretty, must be imported as data.frame. e.g. csv= data.frame(read.csv("PATH to name_clean_simper.csv"))  
 interesting: a list of the column headers for the columns of interest in the metrics file, should be same as simper.pretty inputs. e.g. c('int1','int2','int3')  
 output_name= the name that is appended to the output filename "_krusk_simper.csv".  
