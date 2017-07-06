@@ -118,6 +118,7 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
     sample_R=row.names(subset(metrics, metrics[[topic1]] == c(colb)))
     #collecting abund values, perform/save mean and stdev calculations
     for(otus in otu_list$OTU){
+      otus = as.character(otus)
       for(sample in sample_L){
         L=append(L,abund[sample,otus])
         mean_L[[otus]]=mean(as.numeric(L))
@@ -133,6 +134,7 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
     }
     #runs kruskal.test for each otu in simper csv, stores as list, also stores abundances
     for(otus in otu_list$OTU){
+      otus = as.character(otus)
       result=kruskal.test(listbact[[otus]]~listmet[[topic1]])
       krusk=append(krusk, result$p.value)
       #stores taxonomic classification for each otu as list
