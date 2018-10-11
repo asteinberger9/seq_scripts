@@ -4,6 +4,9 @@
 
 Please verify accuracy of outputs. These scripts have been repeatedly tested for accuracy on multiple sequencing datasets, however there is no guarentee they will do so for every dataset out there. If issues are found please contact me and I will work on fixing them as I am able.
 
+If you use these scripts for a publication please cite them:
+[![DOI](https://zenodo.org/badge/82193080.svg)](https://zenodo.org/badge/latestdoi/82193080)
+
 ### simper_pretty.R
 This script is meant to rapidly perform the simper function from the R package [vegan](https://cran.r-project.org/web/packages/vegan/index.html) for all comparisons of interest in a dataset. Inputs are OTU and metadata tables, and the output is a .csv. User can tailor contents of .csv by setting perc_cutoff, low_cutoff, and low_val. This function can also handle taxonomic levels instead of OTU, but currently only select formats are compatable. Requires installation of the R package 'vegan'.
 
