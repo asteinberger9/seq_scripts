@@ -1,8 +1,3 @@
----
-title: "README"
-output: html_document
----
-
 ## asteinberger9_seqscripts
 
 ### This repo contains scripts written by Andrew Steinberger.
