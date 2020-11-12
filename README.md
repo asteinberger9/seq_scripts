@@ -50,7 +50,7 @@ output_name= the name that is appended to the output filename "_krusk_simper.csv
 | Sample 2      |       B       |    Soil  |   Rep1   |
 | Sample 3      |       C       |    Ant   |   Rep2   |
 
-#### Taxonomy Table (optional, stright from mothur output)
+#### Taxonomy Table (optional, straight from mothur output)
 
 |               | Size  | Taxonomy                                                                                             |
 | ------------- |:-----:|:----------------------------------------------------------------------------------------------------:|
