@@ -1,12 +1,12 @@
-'
-kruskal.pretty: automates kruskal test execution on simper_pretty.R output
+"
+kruskal.pretty: Automates kruskal.test execution on simper_pretty.R output
 
 Andrew Steinberger
 asteinberger@wisc.edu
 Suen Lab
 University of Wisconsin-Madison
 
-      Copyright (C) 2016 Andrew Steinberger
+      Copyright (C) 2020 Andrew Steinberger
   
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ University of Wisconsin-Madison
 Changelog
 8/2016     Start of script development
 10/14/2016 Developed method to split Variables in Comparison column of X_clean_simper.csv
-           by the "_" seperating them, storing each as variable
+           by the '_' seperating them, storing each as variable
 11/30/2016 Utilized the comparison variables to pull data out of metrics and bacteria 
            files by comparison and save as data table
 12/5/2016  Utilized dplyr for otu table generation, implemented double loop system to 
@@ -32,7 +32,7 @@ Changelog
 12/6/2016  Removed multi-topic checking as SIMPER req. compar.made w/in same topic,
            kruskal.test implemented, output p.values as list, write to csv,
            First working version!! Added fdr pvalue correctn, converted to function
-12/14/2016 Output includes "Taxonomy" column with the taxonomic classification of each
+12/14/2016 Output includes 'Taxonomy' column with the taxonomic classification of each
            otu, added breaks in nested loops to shorten processing time
 12/15/2016 Fixed bug causing crash when only one topic in interesting
 1/20/2017  Output includes mean relative abundances of each significant OTU for each
@@ -40,16 +40,21 @@ Changelog
 1/24/2017  Handles simper.pretty output at taxonomic lvls, adds rel abund stdev to
            output file
 2/28/2017  Fixed crash when rownames and csv$X unequal, optional taxonomy argument
+11/11/2020 Fixed error due to loss of 'levels' function use after R update.
 
-Mothur output:
-  otu=      otu table
-  metrics=  metadata table
-  taxonomy= .taxonomy output file from classify.otu command in mothur (optional)
-simper.pretty output:
-  csv=         _clean_simper.csv (*Must be imported as data.frame)
-    (i.e. csv= data.frame(read.csv("PATH to .csv")))
-  interesting= columns of var of interest in metadata (same as simper.pretty input)
-  output_name= desired name of output (i.e. outputname_krusk_simper.csv)'
+Inputs:
+  From mothur:
+    otu= otu table
+    metrics= metadata table
+    taxonomy= .taxonomy output file from classify.otu command in mothur (optional)
+  From simper.pretty output:
+    csv= NAME_clean_simper.csv (*Must be imported as data.frame*)
+  interesting= metadata columns of variables of interest (same var as simper.pretty input)
+  output_name= desired name of output (i.e. outputname_krusk_simper.csv)
+
+Example of use:
+kruskal.pretty(bacteria, metrics, csv, c('sloth_sp','type','sp.type'), 'sloth', taxonomy)
+"
 ###########################################################################################
 
 kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy){
@@ -79,7 +84,7 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
   R_abund_sd=c()
   abund=as.matrix(otu)
   abund=abund/rowSums(abund)
-  for(b in levels(csv$Comparison)){
+  for(b in unique(csv$Comparison)){
     otu_list=dplyr::filter(csv, Comparison==b) #saves otu list for current comparison
     for(i in csv$X){
       if(as.character(csv$Comparison[i])==b){  ##splitting comparisons so can call individually for table generation
@@ -92,11 +97,11 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
     #saving topic containing var of interest (cola/colb) (less memory intensive)
     for(topic in interesting){
       #preventing crash if there is only one topic in interesting
-      if(is.null(levels(metrics[[topic]]))==TRUE){
+      if(is.null(unique(metrics[[topic]]))==TRUE){
         topic1=topic
         break
       }
-      for(sbtpic in levels(metrics[[topic]])){
+      for(sbtpic in unique(metrics[[topic]])){
         if(sbtpic==cola){
           topic1=topic
           break
@@ -153,7 +158,8 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
   #adjusted p-values for multiple comparisons
   fdr=p.adjust(krusk, method='fdr')
   #order csv to match 'krusk'/'fdr' list, add p.val, add taxonomy, re-ord to match orig csv, write to csv
-  o_csv=dplyr::arrange(csv, Comparison)
+  #o_csv=dplyr::arrange(csv, Comparison)
+  o_csv=csv
   o_csv[,5]=krusk
   o_csv[,6]=fdr
   o_csv[,7]=tax
@@ -161,7 +167,7 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
   o_csv[,9]=L_sd
   o_csv[,10]=R_mean
   o_csv[,11]=R_sd
-  o_csv=dplyr::arrange(o_csv, X)
+  #o_csv=dplyr::arrange(o_csv, X)
   colnames(o_csv)[which(names(o_csv) == "V5")] <- "krusk_p.val" #changes column header
   colnames(o_csv)[which(names(o_csv) == "V6")] <- "fdr_krusk_p.val"
   colnames(o_csv)[which(names(o_csv) == "V7")] <- "Taxonomy"
@@ -172,6 +178,3 @@ kruskal.pretty = function(otu, metrics, csv, interesting, output_name, taxonomy)
   o_csv[,1]=NULL
   write.csv(o_csv, file=paste(output_name,"_krusk_simper.csv", sep=""))
 }
-
-#example of use
-kruskal.pretty(bacteria, metrics, csv, c('sloth_sp','type','sp.type'), 'sloth', taxonomy)
